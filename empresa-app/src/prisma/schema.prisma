@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql" 
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model produto {
+  id_produto         Int       @id @default(autoincrement())
+  nome               String
+  categoria_id       Int
+  preco              Float
+  quantidade_estoque Int
+  fornecedor_id      Int
+  data_aquisicao     DateTime
+  data_validade      DateTime
+
+  categoria   categoria   @relation(fields: [categoria_id], references: [id_categoria])
+  fornecedor  fornecedor  @relation(fields: [fornecedor_id], references: [id_fornecedor])
+
+  movimentacoes      movimentacao_estoque[]
+  pedidos_reposicao  pedido_reposicao[]
+}
+
+model categoria {
+  id_categoria Int       @id @default(autoincrement())
+  nome         String
+  produtos     produto[]
+}
+
+model estoquista {
+  id_estoquista Int       @id @default(autoincrement())
+  nome          String
+  tipo          String
+  email         String
+
+  movimentacoes    movimentacao_estoque[]
+  pedidos_reposicao pedido_reposicao[]
+}
+
+model fornecedor {
+  id_fornecedor Int       @id @default(autoincrement())
+  nome          String
+  endereco      String
+  contato       String
+}
+
+model movimentacao_estoque {
+  id_movimentacao Int       @id @default(autoincrement())
+  estoquista_id   Int
+  produto_id      Int
+  tipo            String
+  quantidade      Int
+  data_hora       DateTime
+
+  estoquista estoquista @relation(fields: [estoquista_id], references: [id_estoquista])
+  produto    produto    @relation(fields: [produto_id], references: [id_produto])
+}
+
+model pedido_reposicao {
+  id_pedido     Int       @id @default(autoincrement())
+  estoquista_id Int
+  produto_id    Int
+  quantidade    Int
+  data_criacao  DateTime
+
+  estoquista estoquista @relation(fields: [estoquista_id], references: [id_estoquista])
+  produto    produto    @relation(fields: [produto_id], references: [id_produto])
+}
