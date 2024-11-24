@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   try {
     switch (method) {
       case "POST": // Create
-        const novoDetalhe = await prisma.detalhes_produto.create({
+        const novoDetalhe = await prisma.detalhesProduto.create({
           data: {
             descricao: body.descricao,
             fabricante: body.fabricante,
@@ -19,18 +19,18 @@ export default async function handler(req, res) {
 
       case "GET": // Read
         if (query.id) {
-          const detalhe = await prisma.detalhes_produto.findUnique({
+          const detalhe = await prisma.detalhesProduto.findUnique({
             where: { id_detalhes_produto: parseInt(query.id) },
           });
           res.status(200).json(detalhe);
         } else {
-          const detalhes = await prisma.detalhes_produto.findMany();
+          const detalhes = await prisma.detalhesProduto.findMany();
           res.status(200).json(detalhes);
         }
         break;
 
       case "PUT": // Update
-        const detalheAtualizado = await prisma.detalhes_produto.update({
+        const detalheAtualizado = await prisma.detalhesProduto.update({
           where: { id_detalhes_produto: parseInt(query.id) },
           data: {
             descricao: body.descricao,
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         break;
 
       case "DELETE": // Delete
-        await prisma.detalhes_produto.delete({
+        await prisma.detalhesProduto.delete({
           where: { id_detalhes_produto: parseInt(query.id) },
         });
         res.status(204).end();
@@ -51,4 +51,10 @@ export default async function handler(req, res) {
 
       default:
         res.setHeader("Allow", ["POST", "GET", "PUT", "DELETE"]);
-        res.status(405).end(`Método ${method} n
+        res.status(405).end(`Método ${method} não permitido`);
+        break;
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

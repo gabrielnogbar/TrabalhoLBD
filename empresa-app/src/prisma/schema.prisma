@@ -4,8 +4,9 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+
 datasource db {
-  provider = "postgresql" 
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -13,65 +14,69 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model produto {
-  id_produto         Int       @id @default(autoincrement())
-  nome               String
+
+model Produto {
+  id_produto         Int                @id @default(autoincrement())
+  nome_produto       String
   categoria_id       Int
   preco              Float
   quantidade_estoque Int
   fornecedor_id      Int
-  data_aquisicao     DateTime
-  data_validade      DateTime
-
-  categoria   categoria   @relation(fields: [categoria_id], references: [id_categoria])
-  fornecedor  fornecedor  @relation(fields: [fornecedor_id], references: [id_fornecedor])
-
-  movimentacoes      movimentacao_estoque[]
-  pedidos_reposicao  pedido_reposicao[]
+  detalhes_produto   DetalhesProduto?   @relation
+  categoria          Categoria          @relation(fields: [categoria_id], references: [id_categoria])
+  fornecedor         Fornecedor         @relation(fields: [fornecedor_id], references: [id_fornecedor])
+  movimentacoes      MovimentacaoEstoque[]
+  pedidosReposicao   PedidoReposicao[]
 }
 
-model categoria {
-  id_categoria Int       @id @default(autoincrement())
-  nome         String
-  produtos     produto[]
+model Categoria {
+  id_categoria  Int       @id @default(autoincrement())
+  nome_categoria String
+  produtos       Produto[]
 }
 
-model estoquista {
-  id_estoquista Int       @id @default(autoincrement())
-  nome          String
-  tipo          String
-  email         String
-
-  movimentacoes    movimentacao_estoque[]
-  pedidos_reposicao pedido_reposicao[]
+model Estoquista {
+  id_estoquista    Int                  @id @default(autoincrement())
+  nome_estoquista  String
+  email_estoquista String
+  movimentacoes    MovimentacaoEstoque[]
+  pedidosReposicao PedidoReposicao[]
 }
 
-model fornecedor {
+model Fornecedor {
   id_fornecedor Int       @id @default(autoincrement())
-  nome          String
-  endereco      String
-  contato       String
+  nome_fornecedor String
+  endereco        String
+  telefone        String
+  produtos        Produto[]
 }
 
-model movimentacao_estoque {
-  id_movimentacao Int       @id @default(autoincrement())
+model MovimentacaoEstoque {
+  id_movimentacao Int        @id @default(autoincrement())
   estoquista_id   Int
   produto_id      Int
   tipo            String
   quantidade      Int
   data_hora       DateTime
-
-  estoquista estoquista @relation(fields: [estoquista_id], references: [id_estoquista])
-  produto    produto    @relation(fields: [produto_id], references: [id_produto])
+  estoquista      Estoquista @relation(fields: [estoquista_id], references: [id_estoquista])
+  produto         Produto    @relation(fields: [produto_id], references: [id_produto])
 }
 
-model pedido_reposicao {
-  id_pedido     Int       @id @default(autoincrement())
+model PedidoReposicao {
+  id_pedido     Int        @id @default(autoincrement())
   estoquista_id Int
   produto_id    Int
   quantidade    Int
   data_criacao  DateTime
+  estoquista    Estoquista @relation(fields: [estoquista_id], references: [id_estoquista])
+  produto       Produto    @relation(fields: [produto_id], references: [id_produto])
+}
 
-  estoquista estoquista @relation(fields: [estoquista_id], references: [id_estoquista])
-  produto    produto    @relation(fields: [produto_id], references: [id_produto])
+model DetalhesProduto {
+  id_detalhes_produto Int    @id @default(autoincrement())
+  descricao           String
+  fabricante          String
+  data_validade       DateTime
+  data_aquisicao      DateTime
+  produto             Produto @relation(fields: [id_detalhes_produto], references: [id_produto])
 }

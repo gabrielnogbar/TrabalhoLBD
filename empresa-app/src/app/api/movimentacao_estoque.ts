@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   try {
     switch (method) {
       case "POST": // Create
-        const novaMovimentacao = await prisma.movimentacao_estoque.create({
+        const novaMovimentacao = await prisma.movimentacaoEstoque.create({
           data: {
             estoquista_id: body.estoquista_id,
             produto_id: body.produto_id,
@@ -20,18 +20,18 @@ export default async function handler(req, res) {
 
       case "GET": // Read
         if (query.id) {
-          const movimentacao = await prisma.movimentacao_estoque.findUnique({
+          const movimentacao = await prisma.movimentacaoEstoque.findUnique({
             where: { id_movimentacao: parseInt(query.id) },
           });
           res.status(200).json(movimentacao);
         } else {
-          const movimentacoes = await prisma.movimentacao_estoque.findMany();
+          const movimentacoes = await prisma.movimentacaoEstoque.findMany();
           res.status(200).json(movimentacoes);
         }
         break;
 
       case "PUT": // Update
-        const movimentacaoAtualizada = await prisma.movimentacao_estoque.update({
+        const movimentacaoAtualizada = await prisma.movimentacaoEstoque.update({
           where: { id_movimentacao: parseInt(query.id) },
           data: {
             estoquista_id: body.estoquista_id,
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
         break;
 
       case "DELETE": // Delete
-        await prisma.movimentacao_estoque.delete({
+        await prisma.movimentacaoEstoque.delete({
           where: { id_movimentacao: parseInt(query.id) },
         });
         res.status(204).end();

@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   try {
     switch (method) {
       case "POST": // Create
-        const novoPedido = await prisma.pedido_reposicao.create({
+        const novoPedido = await prisma.pedidoReposicao.create({
           data: {
             estoquista_id: body.estoquista_id,
             produto_id: body.produto_id,
@@ -19,18 +19,18 @@ export default async function handler(req, res) {
 
       case "GET": // Read
         if (query.id) {
-          const pedido = await prisma.pedido_reposicao.findUnique({
+          const pedido = await prisma.pedidoReposicao.findUnique({
             where: { id_pedido: parseInt(query.id) },
           });
           res.status(200).json(pedido);
         } else {
-          const pedidos = await prisma.pedido_reposicao.findMany();
+          const pedidos = await prisma.pedidoReposicao.findMany();
           res.status(200).json(pedidos);
         }
         break;
 
       case "PUT": // Update
-        const pedidoAtualizado = await prisma.pedido_reposicao.update({
+        const pedidoAtualizado = await prisma.pedidoReposicao.update({
           where: { id_pedido: parseInt(query.id) },
           data: {
             estoquista_id: body.estoquista_id,
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         break;
 
       case "DELETE": // Delete
-        await prisma.pedido_reposicao.delete({
+        await prisma.pedidoReposicao.delete({
           where: { id_pedido: parseInt(query.id) },
         });
         res.status(204).end();
