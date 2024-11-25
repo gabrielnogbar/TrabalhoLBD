@@ -1,6 +1,45 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Categorias
+ *   description: API para gerenciar categorias
+ */
+
+/**
+ * @swagger
+ * /api/categoria:
+ *   get:
+ *     summary: Retorna todas as categorias
+ *     tags: [Categorias]
+ *     responses:
+ *       200:
+ *         description: Lista de categorias
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Categoria'
+ *   post:
+ *     summary: Cria uma nova categoria
+ *     tags: [Categorias]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Categoria'
+ *     responses:
+ *       201:
+ *         description: Categoria criada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Categoria'
+ */
 export default async function handler(req, res) {
   const { method, body, query } = req;
 
