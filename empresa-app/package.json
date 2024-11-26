@@ -2,12 +2,14 @@
   "name": "your-project-name",
   "version": "1.0.0",
   "scripts": {
+    "seed": "node prisma/seed.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "next": "^14.2.17",
     "punycode": "^2.3.1",
     "react": "^18",
